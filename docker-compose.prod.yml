@@ -1,0 +1,31 @@
+version: "3.9"
+
+networks:
+  stack_net:
+    external: true
+
+services:
+  bolt:
+    image: ghcr.io/stackblitz-labs/bolt.diy:latest
+    container_name: bolt-diy
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      PORT: 5173
+      VITE_LOG_LEVEL: info
+      DEFAULT_NUM_CTX: ${DEFAULT_NUM_CTX:-32768}
+      RUNNING_IN_DOCKER: "true"
+      # Add any provider keys (OPENAI_API_KEY, ANTHROPIC_API_KEY, etc.) in .env
+    expose:
+      - "5173"
+    # Run wrangler with bindings generated from .env/.env.local
+    command:
+      [
+        "sh",
+        "-c",
+        "bindings=$(./bindings.sh) && pnpm dlx wrangler@3 pages dev ./build/client $$bindings --ip 0.0.0.0 --port 5173 --no-show-interactive-dev-session"
+      ]
+    networks:
+      - stack_net

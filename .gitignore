@@ -27,6 +27,7 @@ dist-ssr
 /build
 functions/build/
 .env.local
+.env.production
 .env
 .dev.vars
 *.vars
