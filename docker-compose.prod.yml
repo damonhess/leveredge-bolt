@@ -9,8 +9,11 @@ services:
     image: ghcr.io/stackblitz-labs/bolt.diy:latest
     container_name: bolt-diy
     restart: unless-stopped
+    volumes:
+      - /etc/ssl/certs:/etc/ssl/certs:ro
     env_file:
       - .env
+      - .env.local
     environment:
       NODE_ENV: production
       PORT: 5173
